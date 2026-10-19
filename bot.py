@@ -4,7 +4,7 @@
 TOKEN = "8877210409:AAGgaRlFve7ChlERphyNrRmKF038N4RVax0"   # BotFather tokeni
 ADMIN_IDS = {5538156384}              # Telegram ID ingiz, masalan: {123456789}  (bir nechta: {111, 222})
 
-STEP_METERS = 200            # har necha metrga
+STEP_METERS = 100            # har necha metrga
 STEP_PRICE = 600             # necha so'm
 MIN_PRICE = 3000             # minimal narx (so'm)
 ROAD_FACTOR = 1.3            # to'g'ri chiziq -> yo'l koeffitsienti
