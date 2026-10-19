@@ -252,9 +252,10 @@ async def my_orders(update: Update, context: ContextTypes.DEFAULT_TYPE) -> None:
 async def order_start(update: Update, context: ContextTypes.DEFAULT_TYPE) -> int:
     context.user_data.clear()
     await update.message.reply_text(
-        "📦 Buyurtmani <b>qayerdan</b> olishimiz kerak?\n"
-        "Pastdagi tugma orqali lokatsiyangizni yuboring.\n\n"
-        "💡 Boshqa joyni belgilash uchun 📎 → Lokatsiya orqali xaritadan tanlang.",
+        "📦 Buyurtmani <b>qayerdan</b> olishimiz kerak?\n\n"
+        "1️⃣ Hozirgi joyingiz bo'lsa — <b>«📍 Olish manzilini yuborish»</b> tugmasini bosing.\n"
+        "2️⃣ Boshqa joy bo'lsa — 📎 (skrepka) → <b>Lokatsiya</b> → xaritada kerakli joyni belgilab, "
+        "<b>«Tanlangan lokatsiyani yuborish»</b> ni bosing.",
         reply_markup=cancel_kb([KeyboardButton("📍 Olish manzilini yuborish", request_location=True)]),
         parse_mode=ParseMode.HTML,
     )
@@ -266,10 +267,11 @@ async def pickup_location(update: Update, context: ContextTypes.DEFAULT_TYPE) ->
     context.user_data["pickup"] = (loc.latitude, loc.longitude)
     await update.message.reply_text(
         "✅ Olish manzili qabul qilindi!\n\n"
-        "🏁 Endi buyurtmani <b>qayerga</b> yetkazamiz?\n"
-        "Yetkazish manzilini lokatsiya sifatida yuboring "
-        "(📎 → Lokatsiya orqali xaritadan tanlashingiz mumkin).",
-        reply_markup=cancel_kb(),
+        "🏁 Endi buyurtmani <b>qayerga</b> yetkazamiz?\n\n"
+        "1️⃣ Hozirgi joyingizga bo'lsa — <b>«📍 Yetkazish manzilini yuborish»</b> tugmasini bosing.\n"
+        "2️⃣ Boshqa joyga bo'lsa — 📎 (skrepka) → <b>Lokatsiya</b> → xaritada kerakli joyni qo'lda belgilab, "
+        "<b>«Tanlangan lokatsiyani yuborish»</b> ni bosing.",
+        reply_markup=cancel_kb([KeyboardButton("📍 Yetkazish manzilini yuborish", request_location=True)]),
         parse_mode=ParseMode.HTML,
     )
     return DELIVERY
@@ -282,7 +284,8 @@ async def delivery_location(update: Update, context: ContextTypes.DEFAULT_TYPE) 
 
     if distance < 50:
         await update.message.reply_text(
-            "⚠️ Olish va yetkazish manzillari juda yaqin. Iltimos, yetkazish manzilini qayta yuboring."
+            "⚠️ Olish va yetkazish manzillari juda yaqin. Iltimos, yetkazish manzilini qayta yuboring.",
+            reply_markup=cancel_kb([KeyboardButton("📍 Yetkazish manzilini yuborish", request_location=True)]),
         )
         return DELIVERY
     if distance * ROAD_FACTOR / 1000 > MAX_DISTANCE_KM:
@@ -424,12 +427,18 @@ async def confirm_order(update: Update, context: ContextTypes.DEFAULT_TYPE) -> i
 
 
 async def wrong_pickup(update: Update, context: ContextTypes.DEFAULT_TYPE) -> int:
-    await update.message.reply_text("Iltimos, olish manzilini lokatsiya sifatida yuboring (tugma yoki 📎 → Lokatsiya).")
+    await update.message.reply_text(
+        "Iltimos, olish manzilini lokatsiya sifatida yuboring (tugma yoki 📎 → Lokatsiya).",
+        reply_markup=cancel_kb([KeyboardButton("📍 Olish manzilini yuborish", request_location=True)]),
+    )
     return PICKUP
 
 
 async def wrong_delivery(update: Update, context: ContextTypes.DEFAULT_TYPE) -> int:
-    await update.message.reply_text("Iltimos, yetkazish manzilini lokatsiya sifatida yuboring (tugma yoki 📎 → Lokatsiya).")
+    await update.message.reply_text(
+        "Iltimos, yetkazish manzilini lokatsiya sifatida yuboring (tugma yoki 📎 → Lokatsiya).",
+        reply_markup=cancel_kb([KeyboardButton("📍 Yetkazish manzilini yuborish", request_location=True)]),
+    )
     return DELIVERY
 
 
